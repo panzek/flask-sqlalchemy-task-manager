@@ -1,0 +1,42 @@
+<!-- tasks template that uses Template Inheritance to extend from the base file -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="light-blue-text text-darken-4 center-align">Add Category</h3>
+
+<!-- To make this responsive, we use the Materialize grid helper classes and layout -->
+<div class="row card-panel grey lighten-5">
+    <form class="col s12" method="POST" action="{{ url_for('add_category') }}">
+        <!-- category_name -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="fas fa-folder-open prefix light-blue-text text-darken-4"></i>
+                <input id="category_name" name="category_name" minlength="3" maxlength="25" type="text" class="validate" required>
+                <label for="category_name">Category Name</label>
+            </div>
+        </div>
+        <!-- 
+            To make this responsive, we use the Materialize grid helper classes and layout. 
+            First, start with a row, which has a column that spans all 12 spaces, and is center-aligned. 
+            Within this column, we'll add a link that will use the Materialize 'btn-large' class, 
+            which will make it a larger button than their default button size. It will also have some 
+            helper color classes to make it light-blue and darken-2. The link will be "Add Category", 
+            and include an icon of your choosing, so I'll add a generic Font-Awesome 'plus' symbol. 
+            As for the href, since we'll be targeting a file within our own project, we must use the 
+            double curly-brackets and url_for() method, and assign the URL to be 'add_category'.
+
+            Now go to routes.py file, and create some functions that will generate these template.
+        -->
+
+        <!-- submit button -->
+        <div class="row">
+            <div class="col s12 center-align">
+                <button type="submit" class="btn-large light-blue darken-1">
+                    Add Category <i class="fas fa-plus-square right"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

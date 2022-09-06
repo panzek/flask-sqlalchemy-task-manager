@@ -1,0 +1,14 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+/*
+the above code will make the footer always stay at the bottom of 
+the page, no matter how much or how little content is on each page.
+*/

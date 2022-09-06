@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" type="text/css"> <!-- CSS link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css"> <!-- connecting our static files to the base template-->
+    <title>Task Manager</title>
+</head>
+<body>
+
+    <header>
+        <!-- top navbar -->
+        <nav class="light-blue darken-1">
+            <div class="nav-wrapper">
+              <a href="#!" class="brand-logo">Task Manager</a>
+              <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
+              <ul class="right hide-on-med-and-down">
+                <li><a href="{{ url_for('home') }} ">Home</a></li>
+                <li><a href="{{ url_for('add_task') }}">New Task</a></li>
+                <li><a href="{{ url_for('categories') }}">Categories</a></li>
+              </ul>
+            </div>
+        </nav>
+        
+        <!-- mobile sidenav -->
+        <ul class="sidenav" id="mobile-demo">
+            <li><a href="{{ url_for('home') }} ">Home</a></li>
+            <li><a href="{{ url_for('add_task') }}">New Task</a></li>
+            <li><a href="{{ url_for('categories') }}">Categories</a></li>
+        </ul>
+    </header>
+
+    <!-- 
+        The reason it shows the unordered list twice is because one is for the navbar on the top of the page, and the other is for our mobile side navbar 
+
+        Similar to our static files, we need to use the url_for() method for any links within our project.
+        We don't need to include the 'static' or 'filename' properties, since this is calling an actual function. 
+        Again, using this approach is very important, so if you only type href="base.html", then your project won't 
+        compile properly by Flask, and you'll likely get an error.
+
+        After including the sidenav-trigger line into your navbar, all you have to do now initialize the plugin.
+        copy the initialization code, either the vanilla JavaScript snippet, or if you're using jQuery, 
+        the snippet below it, then let's paste it within our script.js file
+    -->
+
+    <!-- 
+        # Whenever you use the url_for() method on your links, it's important to note 
+        # that these - add_categories(), categories() - are calling the actual Python functions, 
+        # not the app.route - /add_categories, even though these are often the same name.
+-->
+
+    <main class="container">
+        {% block content %}
+    
+        {% endblock %}
+    </main>
+
+    <footer class="page-footer blue darken-3">
+        <div class="footer-copyright">
+          <div class="container">
+          For educational purposes only
+          <a class="grey-text text-lighten-4 right" href="#!">&copy; iPanzek Technology</a>
+          </div>
+        </div>
+      </footer>
+
+    <!-- Include jQuery script here, before the Materialize script below, if needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> <!-- JavaScript script tag -->
+    <script src="{{ url_for('static', filename='js/script.js')}}"></script> <!-- connecting our static files to the base template-->
+</body>
+</html>
+
+<!-- 
+    We grabbed the CDN link and script tags from the 'Getting Started' page of Materialize. 
+    Paste the CSS link within our base template head element, and 
+    Paste the JavaScript script tag at the bottom of our body element.
+
+    With Materialize, you can use their components with or without jQuery, so if you decide to
+    use jQuery, you'll want to include that just before the Materialize script.
+-->
+
+<!-- 
+    You should be rather familiar with just adding the standard front-end method: <link rel="stylesheet" href="static/css/style.css">. 
+    However, with templating languages, this method can cause errors or the files not loading properly. 
+    We must use double curly brackets, and then use the 'url_for()' method, which takes two values: <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> 
+    First value is the 'static' directory, so it knows to look within this main folder. Separate the values with a comma, 
+    Second value is the file path: filename='css/style.css', and make sure to watch out for the double vs single quotes.
+-->

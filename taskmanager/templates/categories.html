@@ -1,0 +1,60 @@
+<!-- tasks template that uses Template Inheritance to extend from the base file -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="light-blue-text text-darken-4 center-align">Categories</h3>
+
+<!-- Button to add a new category -->
+<div class="row">
+    <div class="col s12 center-align">
+        <a href="{{ url_for('add_category') }}" class="btn-large light-blue darken-2">
+            Add Category <i class="fas fa-plus-square right"></i>
+        </a>
+    </div>
+</div>
+
+<!-- code snippet from Materialize Basic Card components -->
+<div class="row">
+  {% for category in categories %}
+  <div class="col s12 m6 l3">
+      <div class="card light-blue darken-4 center-align">
+          <div class="card-content white-text">
+              <span class="card-title">{{ category.category_name }}</span> 
+          </div>
+          <div class="card-action">
+              <a href="{{ url_for('edit_category', category_id=category.id)}}" class="btn green accent-4">Edit</a>
+              <a href="{{ url_for('delete_category', category_id=category.id)}}" class="btn red">Delete</a>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
+  <!-- 
+    <div class="col s12 m6 l3"> EXPLAINED
+    s12 = 100% of grid (1 card per row)
+    m6 = 50% of grid (2 cards per row)
+    l3 = 25% of grid (4 cards per row)
+  -->
+
+  <!--
+    Eventually, we are going to have more than one category listed here, but so far we've only added the single category of 'Travel'. 
+    WE then used the Jinja syntax of a for-loop to prepare the code to recognize multiple cards. We don't want each card to 
+    stack on top of each other, but instead, to flow within the same row, each having their own column. 
+    We add the for-loop just inside of the row, so that everything within the row is repeated and looped. 
+    And the closing should be just after the div for this column, so follow that down, and add the closing element there. 
+    
+    Similar to JavaScript, we need to define a new index for each iteration of this loop, so to keep things consistent, we will call ours 'category'. 
+    This means that for each 'category' in the ‘list of categories' being passed over from our Python function, it will generate a new column and card. 
+    Finally, we need to display the actual category name that's stored within our database, so we can update the card-title. 
+    Since we are within a for-loop, we need to use the newly defined index variable of 'category'. We also need to use dot-notation and tell it 
+    which key should be printed here, so in this case, it should be 'category.category_name', which means, “this category’s key of category_name”. 
+    
+    In other words, within this for-loop, we have the variable of 'category' that is used for each iteration of this loop, and we have targeted the 'category_name' field.
+    If you wanted to show the primary key instead, that's stored within our database as 'id', so it would be 'category.id' for example.
+    Due to the fact that our 'Edit' and 'Delete' buttons are still within the for-loop, we can use that variable to identify the specific category primary key using '.id'.
+    
+    In addition to calling our new 'edit_category' function, we need to pass another argument: "category_id" to specify which particular category we are attempting to update.
+    Make sure you add a comma after the single-quotes, which identifies that we are calling the function with some data included.
+  -->

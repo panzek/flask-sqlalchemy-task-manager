@@ -1,0 +1,142 @@
+<!-- tasks template that uses Template Inheritance to extend from the base file -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="light-blue-text text-darken-4 center-align">Edit Task</h3>
+
+<!-- To make this responsive, we use the Materialize grid helper classes and layout -->
+<div class="row card-panel grey lighten-5">
+    <form class="col s12" method="POST" action="{{ url_for('edit_task', task_id=task.id) }}">
+        <!-- task_name -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="fas fa-pencil-alt prefix light-blue-text text-darken-4"></i>
+                <input id="task_name" name="task_name" value="{{ task.task_name }}" minlength="5" maxlength="50"
+                    type="text" class="validate" required>
+                <label for="task_name">Task Name</label>
+            </div>
+        </div>
+        <!-- 
+            To make this responsive, we use the Materialize grid helper classes and layout. 
+            First, start with a row, which has a column that spans all 12 spaces, and is center-aligned. 
+            Within this column, we'll add a link that will use the Materialize 'btn-large' class, 
+            which will make it a larger button than their default button size. It will also have some 
+            helper color classes to make it light-blue and darken-2. 
+            
+            The link will be "Add Task", and include an icon of your choosing, so I'll add a generic Font-Awesome 'plus' symbol. 
+            As for the href, since we'll be targeting a file within our own project, we must use the 
+            double curly-brackets and url_for() method, and assign the URL to be 'add_task'.
+
+            Now go to routes.py file, and create some functions that will generate these template.
+        -->
+        
+        <!-- task description -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="fas fa-align-left prefix light-blue-text text-darken-4"></i>
+                <textarea id="task_description" name="task_description" minlength="5" maxlength="200" type="text"
+                    class="materialize-textarea validate" required>
+                    {{- task.task_description -}} 
+                </textarea>
+                <label for="task_description">Task Description</label>
+            </div>
+        </div>
+        <!-- 
+            uses the Materialize helper class of 'materialize-textarea' so that it receives some custom styles using the framework.
+
+            Jinja has several helper elements, and one of them is specifically designed for whitespace control.
+            If we include a minus-symbol at the beginning and end of this variable: - task.task_description -,  it will remove any whitespace.
+            Alternatively, if you wanted to add whitespace, you would apply a plus-symbol only at the beginning of the variable, not the end.
+        -->
+
+        <!-- due date -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="fas fa-calendar-alt prefix light-blue-text text-darken-4"></i>
+                <input id="due_date" name="due_date" type="text" value="{{ task.due_date.strftime('%d %B, %Y') }}"
+                    class="datepicker validate" required>
+                <label for="due_date">Due Date</label>
+            </div>
+        </div>
+        <!--
+            instead of having users put a minimum or maximum value, we are going to use another one of the Materialize helper classes called 'datepicker'.
+            Even though this is a standard input field, by using the 'datepicker' helper class, we need to also initialize the datepicker using JavaScript.
+            From the Materialize documentation, let's copy the code snippet for the datepicker and paste it into our custom JavaScript file: "script.js".
+        -->
+
+        <!-- is urgent -->
+        <div class="row">
+            <div class="input-field col s12">
+                <div class="switch">
+                    <i class="fas fa-exclamation-circle prefix light-blue-text text-darken-4"></i>
+                    <label for="is_urgent">
+                        {% if task.is_urgent == True %}
+                            <input id="is_urgent" name="is_urgent" type="checkbox" checked>
+                        {% else %}
+                            <input id="is_urgent" name="is_urgent" type="checkbox">
+                        {% endif %}
+                        <span class="lever"></span>
+                        Is Urgent
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!--
+            Using the Materialize docs from the 'Switches' page, you can see that the toggle is wrapped
+            inside of a div with the class of 'switch', and uses the type of 'checkbox'.
+            Also, the input is physically inside of the label this time, and has a span with the class of 'lever'.
+        -->
+
+        <!-- category id -->
+        <!-- The final field above is for our dropdown list to select the category applicable to this task. -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="fas fa-folder-open prefix light-blue-text text-darken-4"></i>
+                <select id="category_id" name="category_id" class="validate" required>
+                    <option value="" disabled>Choose Category</option>
+                    {% for category in categories %}
+                        {% if category == task.category %}
+                            <option value="{{ category.id }}" selected>{{ category.category_name }}</option>
+                        {% else %}
+                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <label for="category_id">Category</label>
+            </div>
+        </div>
+        <!-- 
+            Back within the Materialize docs, we navigate to the 'Select' page for forms, and we
+            only focus on the basic dropdown element at the top.
+        -->
+        <!-- 
+            we create a Jinja for-loop over the list of all categories that are being retrieved from the database.
+            {% for category in categories %} making sure to also include the {% endfor %} block.
+
+            For each category in this loop, we need to create a new 'option' in the dropdown.
+            The value for each option will be the category's unique ID, but obviously the ID won't make
+            much sense to our users, so we'll use the 'category.category_name' for display purposes.
+
+            If you recall, whenever submitting a form to the back-end, Python uses the name="" attribute to grab the data being stored within the database.
+            For select elements, the actual data being stored is the value of the selected option, which will be the category ID, whether it's 1, 2, 3, 4, and so on.
+
+            The final step we need to do for the dropdown to work, is to initialize it via JavaScript, and that's because Materialize has a custom design 
+            for the select elements. Copy the initialization code from their documentation, and paste it within your JavaScript file: "script.js".
+        -->
+
+        <!-- submit button -->
+        <div class="row">
+            <div class="col s12 center-align">
+                <button type="submit" class="btn-large light-blue darken-1">
+                    Edit Task <i class="fas fa-plus-square right"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+<!-- 
+    In order to render the template, we need to create a new function inside of the routes.py file.
+-->

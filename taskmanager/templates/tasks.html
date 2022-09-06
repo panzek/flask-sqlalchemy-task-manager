@@ -1,0 +1,90 @@
+<!-- tasks template that uses Template Inheritance to extend from the base file -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="light-blue-text text-darken-4 center-align">Tasks</h3>
+
+<!-- Button to add a new task -->
+<div class="row">
+    <div class="col s12 center-align">
+        <a href="{{ url_for('add_task') }}" class="btn-large light-blue darken-2">
+            Add Task <i class="fas fa-plus-square right"></i>
+        </a>
+    </div>
+</div>
+
+<!-- edited 'collapsibles' code snippet from Materialize -->
+<ul class="collapsible">
+    {% for task in tasks|sort(attribute="due_date") %}
+    <li>
+        <div class="collapsible-header white-text light-blue darken-4">
+            <i class="fas fa-caret-down"></i>
+            <strong>{{ task.task_name }}</strong> : {{ task.due_date.strftime("%d %B, %Y") }}
+            {% if task.is_urgent == True %}
+                <i class="fas fa-exclamation-circle light-blue-text text-lighten-2"></i>
+            {% endif %}
+        </div>
+        <div class="collapsible-body">
+            <strong>{{ task.category }}</strong>
+            <p>{{ task.task_description }}</p>
+            <p>
+                <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn green accent-4">Edit</a>
+                <a href="{{ url_for('delete_task', task_id=task.id)}}" class="btn red">Delete</a>
+            </p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
+
+<!-- 
+    1. "base.html" - the same "URL for method" in the button above we apply to the navbar link, so its added into 
+    the top bar and mobile sidebar links for 'New Task' in "base.html" template. 
+    
+    2. "routes.py" - in the "routes.py" file, we create the function that will render a new template for users to add a new Task. 
+    It's actually quite similar to the 'add_category' function.
+-->
+
+<!-- 
+    we need some sort of method to display our tasks, given that our Tasks contain more information than the categories, 
+    we use something different called 'collapsibles' in Materialize, like an accordion found within Bootstrap.
+    As you can see from the Materialize docs, their collapsibles are simply just unordered-lists with list-items.
+    It is the code we copy the entire code snippet and paste this within our tasks.html template below the existing row.
+
+    We use a downward facing caret or chevron symbol to signify more content is available
+
+    Due to the fact that we will have an unknown number of tasks, we create a for-loop
+    over each task, and have it dynamically add a list-item for each Task from the database.
+    This for-loop will iterate over each task within our list of all tasks.
+
+    use the Jinja filter of "|sort()" on our for-loop, and for the attribute, we sort by the "due_date" column. 
+    This will sort all the tasks by order of the date.
+
+    Since we only want the list-item to be generated for each task, we wrap the list-item inside
+    of our for-loop, making sure not to put the "UL" element inside of the loop. WE then close it with endfor tag.
+
+    The templating engine we're using called Jinja actually comes with a helpful method of '.strftime()', stands for "string from time".
+    This is a Python directive that you can use within your Python files as well, and allows you to format dates and times to your preference.
+    To see a full list of format options, visit strftime.org
+    In our case, the format we opted for was Date Month, comma, Year, so that would be the format of "%d %B, %Y", making sure to be careful with case-sensitivity.
+
+    We want to display the actual task name, so we add the variable {{ task.task_name }} inside the strong tags, 
+    since that's the column header we assigned in the models.py file.
+    We also add the due date as well, using the database column header of 'due_date'.
+    Some of our tasks might be marked as urgent, so we include a conditional check to see if the 'task.is_urgent' is set to True.
+    If it is true, meaning our task is an urgent task, then we include an icon to highlight the fact that it's urgent.
+
+    As for the collapsible-body, we add the specific task category wrapped inside of tags to make it bold.
+    Underneath that, we add a new paragraph tag, which will be where we include the 'task_description' that explains the details about the task.
+
+    there's one more thing we need to do with our collapsibles, which is to initialize them via JavaScript.
+    Go back to the Materialize site, and copy the code that will initialize our collapsible elements.
+    Paste that within your custom JavaScript file: "script.js", and call this variable 'collapsibles', then initialize that below.
+
+    Within the 'collapsible-body' element, just underneath the task-description paragraph, we add another paragraph tag.
+    This one will contain a link, styled like a button, in exactly the same way we created the Edit button for each category.
+
+    Copy the entire href, and then go back to the new 'edit_task' template, where we can then paste that into the form's action attribute.
+    That way, once we've updated any field on the task, it will know which specific task to update within our database.
+    -->
