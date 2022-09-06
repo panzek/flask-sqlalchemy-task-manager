@@ -11,7 +11,10 @@ if os.path.exists("env.py"):
 # CREATE A FLASK APPLICATION OBJECT
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+if os.environ.get("DEVELOPMENT") == "True":
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 # create an instance of the imported Flask() class, which takes the default 
 # Flask __name__ module, and that will be stored in a variable called 'app',
 # We specify two app configuration variables, and these will both come from our environment variables.
